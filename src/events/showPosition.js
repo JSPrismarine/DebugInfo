@@ -41,7 +41,7 @@ module.exports = class Movement extends Plugin {
             .getServer()
             .getOnlinePlayers();
         for (const [key, value] of this.titles) {
-            if (onlinePlayers.some((player) => player.getUUID() === key)) {
+            if (onlinePlayers.some((player) => player.getUUID() === key && player?.debugInfo?.showPos)) {
                 value.connection.sendDataPacket(value.packet);
             } else {
                 this.titles.delete(key);

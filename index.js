@@ -7,11 +7,17 @@ class JoinMessage {
         this.events = {};
         this.commands = {};
         this.loadEvents(__dirname + '/src/events/');
-        //this.loadEvents(__dirname + '/src/commands/');
+        this.loadEvents(__dirname + '/src/commands/');
     }
 
     loadCommands(filePath) {
         let commandFiles = this.getFiles(filePath);
+
+        commandFiles.forEach((fileName) => {
+            const CommandClass = require(fileName);
+            const command = new CommandClass(this);
+            this.commands[command.emitter] = this.events[command.emitter] ? [...this.events[command.emitter], command] : [command];
+        });
         return;
     }
 
