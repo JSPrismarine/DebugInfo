@@ -1,6 +1,6 @@
 {
     "name": "debug-info",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Just a plugin for debugging some stuff",
     "main": "index.js",
     "scripts": {
