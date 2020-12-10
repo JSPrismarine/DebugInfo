@@ -5,7 +5,7 @@ const Config = require('./src/base/Config');
 class JoinMessage {
     constructor(api) {
         this.api = api;
-        this.config = new Config();
+        this.config = new Config(this);
         this.events = {};
         this.commands = {};
         this.loadEvents(__dirname + '/src/events/');
@@ -68,6 +68,10 @@ class JoinMessage {
 
     getConfig() {
         return this.config;
+    }
+
+    getApi() {
+        return this.api;
     }
 }
 

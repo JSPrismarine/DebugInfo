@@ -1,8 +1,6 @@
 const Plugin = require('../base/BasePlugin');
 
-module.exports = class showPosition extends (
-    Plugin
-) {
+module.exports = class showPosition extends Plugin {
     constructor(pluginData) {
         super(pluginData, 'playerMove');
         this.titles = new Map();
@@ -13,45 +11,55 @@ module.exports = class showPosition extends (
     }
 
     run(eventData) {
-        world.getChunkAt(playerX, playerZ, false).then((chunk) => {
-            const packet = this.getApi()
-                .getServer()
-                .getPacketRegistry()
-                .getPackets()
-                .get(0x58);
+        eventData
+            .getPlayer()
+            .getWorld()
+            .getChunkAt(
+                eventData.getTo().getX(),
+                eventData.getTo().getZ(),
+                false
+            )
+            .then((chunk) => {
+                const packet = this.getApi()
+                    .getServer()
+                    .getPacketRegistry()
+                    .getPackets()
+                    .get(0x58);
 
-            if (!packet) return;
+                if (!packet) return;
 
-            const placeholder = {
-                playerX: Math.floor(eventData.getTo().getX()),
-                playerY: Math.floor(eventData.getTo().getY()),
-                playerZ: Math.floor(eventData.getTo().getZ()),
-                chunkX: chunk.getX(),
-                chunkY: chunk.getY(),
-                chunkY: chunk.getZ(),
-                world: eventData.getPlayer().getWorld(),
-                worldName: eventData.getPlayer().getWorld().getname(),
-                provider: world.getProvider().constructor.name
-            };
+                const placeholder = {
+                    playerX: Math.floor(eventData.getTo().getX()),
+                    playerY: Math.floor(eventData.getTo().getY()),
+                    playerZ: Math.floor(eventData.getTo().getZ()),
+                    chunkX: chunk.getX(),
+                    chunkZ: chunk.getZ(),
+                    world: eventData.getPlayer().getWorld(),
+                    worldName: eventData.getPlayer().getWorld().getName(),
+                    provider: eventData.getPlayer().getWorld().getProvider()
+                        .constructor.name
+                };
 
-            let titleText = this.getPlugin().getConfig().get('position-info');
+                let titleText = this.getPlugin()
+                    .getConfig()
+                    .getPositionInfoText();
 
-            for (const key in placeholder) {
-                titletext = titleText.replace(
-                    new RegExp(`{${key}}`, 'gm'),
-                    placeholder[key]
-                );
-            }
+                for (const key in placeholder) {
+                    titleText = titleText.replace(
+                        new RegExp(`{{${key}}}`, 'gm'),
+                        placeholder[key]
+                    );
+                }
 
-            let pk = new packet();
-            pk.type = 4;
-            pk.text = titleText;
+                let pk = new packet();
+                pk.type = 4;
+                pk.text = titleText;
 
-            this.titles.set(eventData.getPlayer().getUUID(), {
-                connection: eventData.getPlayer().getConnection(),
-                packet: pk
+                this.titles.set(eventData.getPlayer().getUUID(), {
+                    connection: eventData.getPlayer().getConnection(),
+                    packet: pk
+                });
             });
-        });
     }
 
     updateTitle() {
