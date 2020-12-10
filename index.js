@@ -1,9 +1,11 @@
 const { readdirSync, statSync } = require('fs');
 const Path = require('path');
+const Config = require('./src/base/Config');
 
 class JoinMessage {
     constructor(api) {
         this.api = api;
+        this.config = new Config();
         this.events = {};
         this.commands = {};
         this.loadEvents(__dirname + '/src/events/');
@@ -62,6 +64,10 @@ class JoinMessage {
                 []
             );
         return [...dirPath, ...dirFiles];
+    }
+
+    getConfig() {
+        return this.config;
     }
 }
 

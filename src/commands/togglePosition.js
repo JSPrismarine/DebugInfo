@@ -1,6 +1,8 @@
 const Plugin = require('../base/BasePlugin');
 
-module.exports = class togglePosition extends Plugin {
+module.exports = class togglePosition extends (
+    Plugin
+) {
     constructor(pluginData) {
         super(pluginData);
 
@@ -17,7 +19,7 @@ module.exports = class togglePosition extends Plugin {
                         if (!sender.debugInfo) sender.debugInfo = {};
 
                         sender.debugInfo.showPos = !sender.debugInfo.showPos;
-                    },
+                    }
                 },
                 this.getApi().getServer()
             );

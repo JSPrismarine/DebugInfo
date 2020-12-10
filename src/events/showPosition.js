@@ -1,7 +1,8 @@
 const Plugin = require('../base/BasePlugin');
-const { stripIndent } = require('common-tags');
 
-module.exports = class showPosition extends Plugin {
+module.exports = class showPosition extends (
+    Plugin
+) {
     constructor(pluginData) {
         super(pluginData, 'playerMove');
         this.titles = new Map();
@@ -12,12 +13,6 @@ module.exports = class showPosition extends Plugin {
     }
 
     run(eventData) {
-        const playerX = Math.floor(eventData.getTo().getX());
-        const playerY = Math.floor(eventData.getTo().getY());
-        const playerZ = Math.floor(eventData.getTo().getZ());
-        const world = eventData.getPlayer().getWorld();
-        const provider = world.getProvider().constructor.name;
-
         world.getChunkAt(playerX, playerZ, false).then((chunk) => {
             const packet = this.getApi()
                 .getServer()
@@ -27,15 +22,34 @@ module.exports = class showPosition extends Plugin {
 
             if (!packet) return;
 
+            const placeholder = {
+                playerX: Math.floor(eventData.getTo().getX()),
+                playerY: Math.floor(eventData.getTo().getY()),
+                playerZ: Math.floor(eventData.getTo().getZ()),
+                chunkX: chunk.getX(),
+                chunkY: chunk.getY(),
+                chunkY: chunk.getZ(),
+                world: eventData.getPlayer().getWorld(),
+                worldName: eventData.getPlayer().getWorld().getname(),
+                provider: world.getProvider().constructor.name
+            };
+
+            let titleText = this.getPlugin().getConfig().get('position-info');
+
+            for (const key in placeholder) {
+                titletext = titleText.replace(
+                    new RegExp(`{${key}}`, 'gm'),
+                    placeholder[key]
+                );
+            }
+
             let pk = new packet();
             pk.type = 4;
-            pk.text = stripIndent`
-                §aPlayer §r[§6X§7: ${playerX} §6Y§7: ${playerY} §6Z§7: ${playerZ}§r] §aChunk §r[§6X§7: ${chunk.getX()} §6Z§7: ${chunk.getZ()}§r]
-                §aWorld §r[§6Name§7: "${world.getName()}" §aProvider: §7${provider}§r]`;
+            pk.text = titleText;
 
             this.titles.set(eventData.getPlayer().getUUID(), {
                 connection: eventData.getPlayer().getConnection(),
-                packet: pk,
+                packet: pk
             });
         });
     }
