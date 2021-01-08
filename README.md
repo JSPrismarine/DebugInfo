@@ -18,6 +18,8 @@ You can insert placerholder for specific values in you hot bar text. Like this:
 
 `This is your X coordinate: 10`
 
+### Available Placeholder
+
 | Placeholder | type   | description                                          |
 | ----------- | ------ | ---------------------------------------------------- |
 | provider    | string | Provider of your current world (LevelDB, Anvil, etc) |

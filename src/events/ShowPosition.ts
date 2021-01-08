@@ -1,16 +1,15 @@
-const Plugin = require('../base/BasePlugin');
+import Event from '../base/Event';
 
-module.exports = class showPosition extends Plugin {
-    constructor(pluginData) {
-        super(pluginData, 'playerMove');
-        this.titles = new Map();
-
+class ShowPosition extends Event {
+    private titles: Map<string, any> = new Map();
+    constructor() {
+        super({ id: 'ShowPosition', emitter: 'playerMove' });
         setInterval(() => {
             this.updateTitle();
         }, 1000 / 60);
     }
 
-    run(eventData) {
+    public run(eventData): void {
         eventData
             .getPlayer()
             .getWorld()
@@ -25,8 +24,6 @@ module.exports = class showPosition extends Plugin {
                     .getPacketRegistry()
                     .getPackets()
                     .get(0x58);
-
-                if (!packet) return;
 
                 const placeholder = {
                     playerX: Math.floor(eventData.getTo().getX()),
@@ -62,19 +59,20 @@ module.exports = class showPosition extends Plugin {
             });
     }
 
-    updateTitle() {
-        const onlinePlayers = this.getApi().getServer().getOnlinePlayers();
+    private updateTitle() {
+        const onlinePlayers = this.getApi()
+            .getServer()
+            .getPlayerManager()
+            .getOnlinePlayers();
         for (const [key, value] of this.titles) {
-            if (
-                onlinePlayers.some(
-                    (player) =>
-                        player.getUUID() === key && player?.debugInfo?.showPos
-                )
-            ) {
+            // TODO
+            if (true) {
                 value.connection.sendDataPacket(value.packet);
             } else {
                 this.titles.delete(key);
             }
         }
     }
-};
+}
+
+export default ShowPosition;

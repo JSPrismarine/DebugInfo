@@ -1,4 +1,13 @@
-module.exports = class Config {
+import ConfigBuilder from '@jsprismarine/prismarine/src/config/ConfigBuilder';
+import ApiV1 from '@jsprismarine/prismarine/dist/src/plugin/api/versions/1.0/PluginApi';
+import Plugin from '../Plugin';
+
+class Config {
+    private configBuilder: ConfigBuilder;
+    private positionInfoText: string;
+    private showPositionInfo: boolean;
+    private plugin: Plugin;
+
     constructor(plugin) {
         this.plugin = plugin;
         this.configBuilder = plugin.getApi().getConfigBuilder('config.yaml');
@@ -12,19 +21,25 @@ module.exports = class Config {
         );
     }
 
-    getConfigBuilder() {
-        return this.configBuilder;
-    }
-
-    getPlugin() {
+    public getPlugin(): Plugin {
         return this.plugin;
     }
 
-    getPositionInfoText() {
+    public getApi(): ApiV1 {
+        return this.getPlugin().getApi();
+    }
+
+    public getConfigBuilder(): ConfigBuilder {
+        return this.configBuilder;
+    }
+
+    public getPositionInfoText(): string {
         return this.positionInfoText;
     }
 
-    getShowPositionInfo() {
+    public getShowPositionInfo(): boolean {
         return this.showPositionInfo;
     }
-};
+}
+
+export default Config;
