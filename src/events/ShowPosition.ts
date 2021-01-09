@@ -8,7 +8,7 @@ interface Title {
     show: boolean;
 }
 class ShowPosition extends Event {
-    private titles: Map<string, Title> = new Map();
+    public titles: Map<string, Title> = new Map();
     constructor() {
         super({ id: 'ShowPosition', emitter: 'playerMove' });
         setInterval(() => {
@@ -41,7 +41,6 @@ class ShowPosition extends Event {
 
     private updateTitle() {
         for (const [key, value] of this.titles) {
-            // TODO
             if (value.show) {
                 value.connection.sendDataPacket(value.packet);
             } else {
