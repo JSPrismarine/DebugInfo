@@ -13,8 +13,6 @@ class Plugin {
 
     constructor(api) {
         this.api = api;
-        this.loadEvents(__dirname + '/src/events/');
-        this.loadCommands(__dirname + '/src/commands/');
     }
 
     private getFiles(folderPath): string[] {
@@ -37,7 +35,20 @@ class Plugin {
         // init commands
         commandFiles.forEach((fileName) => {
             const CommandClass = require(fileName);
-            new CommandClass(this).onInit(this);
+            const command = new CommandClass();
+            command.onInit(this);
+            try {
+                this.getApi()
+                    .getServer()
+                    .getCommandManager()
+                    .registerClassCommand(command, this.getApi().getServer());
+            } catch (err) {
+                this.getApi()
+                    .getServer()
+                    .getLogger()
+                    .warn(`Failed to register command ${command.id}: ${err}`);
+                this.getApi().getServer().getLogger().silly(err.stack);
+            }
         });
     }
 
@@ -47,18 +58,20 @@ class Plugin {
         // init events
         eventFiles.forEach((fileName) => {
             const EventClass = require(fileName);
-            new EventClass(this).onInit(this);
+            new EventClass().onInit(this);
         });
 
         // listen to events
         for (const [key, value] of Object.entries(this.events)) {
             this.api.getEventManager().on(key, (...eventData) => {
-                value.forEach((file) => file?.run(...eventData));
+                value.forEach((file) => file?.execute(...eventData));
             });
         }
     }
 
     public onEnable(): void {
+        this.loadEvents(__dirname + '/src/events/');
+        this.loadCommands(__dirname + '/src/commands/');
         this.api.getLogger().info('ready');
     }
 
