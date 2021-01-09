@@ -64,6 +64,7 @@ class ShowPosition extends Event {
             .getServer()
             .getPlayerManager()
             .getOnlinePlayers();
+
         for (const [key, value] of this.titles) {
             // TODO
             if (true) {
