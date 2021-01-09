@@ -11,16 +11,7 @@
         "apiVersion": "1.0",
         "displayName": "DebugInfo"
     },
-    "contributors": [
-        {
-            "name": "Filiph Sandström",
-            "url": "https://github.com/filfat"
-        },
-        {
-            "name": "Tobi die Topfpflanze",
-            "url": "https://github.com/TobidieTopfpflanze"
-        }
-    ],
+    "author": "@JSPrismarine",
     "license": "MIT",
     "dependencies": {
         "@jsprismarine/brigadier": "^0.1.0",
