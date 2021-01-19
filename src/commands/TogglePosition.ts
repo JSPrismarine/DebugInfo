@@ -1,17 +1,15 @@
-import JspCommand from '@jsprismarine/prismarine/dist/src/command/Command';
 import { CommandDispatcher, literal } from '@jsprismarine/brigadier';
-import Command from '../base/Command';
+import Command from '../core/Command';
 import ShowPosition from '../events/ShowPosition';
 import Player from '@jsprismarine/prismarine/dist/src/player/Player';
+
 class TogglePosition extends Command {
     constructor() {
-        super(
-            new JspCommand({
-                id: 'debug-info:toggle-position',
-                aliases: ['togglepos', 'toggle-pos', 'toggleposition'],
-                description: 'Toggle showing position'
-            })
-        );
+        super({
+            id: 'debuginfo:toggleposition',
+            aliases: ['togglepos'],
+            description: 'Toggle showing position'
+        });
     }
 
     public async register(dispatcher: CommandDispatcher<any>) {
@@ -25,12 +23,14 @@ class TogglePosition extends Command {
                     (context.getSource() as Player).getUUID()
                 );
 
-                titleData.show = !titleData.show;
+                if (titleData) {
+                    titleData.show = !titleData.show;
 
-                event.titles.set(
-                    (context.getSource() as Player).getUUID(),
-                    titleData
-                );
+                    event.titles.set(
+                        (context.getSource() as Player).getUUID(),
+                        titleData
+                    );
+                }
             })
         );
     }

@@ -1,6 +1,0 @@
-position-info-text: >-
-    §aPlayer §r[§6X§7: {{playerX}} §6Y§7: {{playerY}} §6Z§7: {{playerZ}}§r]
-    §aChunk §r[§6X§7: {{chunkX}} §6Z§7: {{chunkZ}}§r]
-
-    §aWorld §r[§6Name§7: "{{worldName}}" §aProvider: §7{{provider}}§r]
-show-Position-Info: true

@@ -2,13 +2,15 @@ import ApiV1 from '@jsprismarine/prismarine/dist/src/plugin/api/versions/1.0/Plu
 import Plugin from '../Plugin';
 
 class Event {
-    private plugin?: Plugin;
+    private plugin!: Plugin;
     private emitter: string;
     public id: string;
     constructor({ id, emitter }: { id: string; emitter: string }) {
         this.emitter = emitter;
         this.id = id;
     }
+
+    public execute(eventData: any): void {}
 
     public getPlugin(): Plugin {
         return this.plugin;

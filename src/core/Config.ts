@@ -1,4 +1,4 @@
-import ConfigBuilder from '@jsprismarine/prismarine/src/config/ConfigBuilder';
+import ConfigBuilder from '@jsprismarine/prismarine/dist/src/config/ConfigBuilder';
 import ApiV1 from '@jsprismarine/prismarine/dist/src/plugin/api/versions/1.0/PluginApi';
 import Plugin from '../Plugin';
 
@@ -8,9 +8,9 @@ class Config {
     private showPositionInfo: boolean;
     private plugin: Plugin;
 
-    constructor(plugin) {
+    constructor(plugin: Plugin) {
         this.plugin = plugin;
-        this.configBuilder = plugin.getApi().getConfigBuilder('config.yaml');
+        this.configBuilder = this.getApi().getConfigBuilder('config.yaml');
         this.positionInfoText = this.getConfigBuilder().get(
             'position-info-text',
             `§aPlayer §r[§6X§7: {{playerX}} §6Y§7: {{playerY}} §6Z§7: {{playerZ}}§r] §aChunk §r[§6X§7: {{chunkX}} §6Z§7: {{chunkZ}}§r]\n§aWorld §r[§6Name§7: "{{worldName}}" §aProvider: §7{{provider}}§r]`

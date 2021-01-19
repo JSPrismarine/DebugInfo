@@ -1,6 +1,8 @@
+import PlayerMoveEvent from '@jsprismarine/prismarine/dist/src/events/player/PlayerMoveEvent';
 import DataPacket from '@jsprismarine/prismarine/dist/src/network/packet/DataPacket';
 import PlayerConnection from '@jsprismarine/prismarine/dist/src/player/PlayerConnection';
-import Event from '../base/Event';
+import Chunk from '@jsprismarine/prismarine/dist/src/world/chunk/Chunk';
+import Event from '../core/Event';
 
 interface Title {
     connection: PlayerConnection;
@@ -16,7 +18,7 @@ class ShowPosition extends Event {
         }, 1000 / 60);
     }
 
-    public execute(eventData): void {
+    public execute(eventData: PlayerMoveEvent): void {
         const packet = this.getApi()
             .getServer()
             .getPacketRegistry()
@@ -59,18 +61,20 @@ class ShowPosition extends Event {
                     eventData.getTo().getZ(),
                     false
                 )
-                .then((chunk) => {
-                    const placeholder = {
-                        playerX: Math.floor(eventData.getTo().getX()),
-                        playerY: Math.floor(eventData.getTo().getY()),
-                        playerZ: Math.floor(eventData.getTo().getZ()),
-                        chunkX: chunk.getX(),
-                        chunkZ: chunk.getZ(),
-                        world: eventData.getPlayer().getWorld(),
-                        worldName: eventData.getPlayer().getWorld().getName(),
-                        provider: eventData.getPlayer().getWorld().getProvider()
-                            .constructor.name
-                    };
+                .then((chunk: Chunk) => {
+                    enum placeholder {
+                        playerX = Math.floor(eventData.getTo().getX()),
+                        playerY = Math.floor(eventData.getTo().getY()),
+                        playerZ = Math.floor(eventData.getTo().getZ()),
+                        chunkX = chunk.getX(),
+                        chunkZ = chunk.getZ(),
+                        world = eventData.getPlayer().getWorld(),
+                        worldName = eventData.getPlayer().getWorld().getName(),
+                        provider = eventData
+                            .getPlayer()
+                            .getWorld()
+                            .getProvider().constructor.name
+                    }
 
                     for (const key in placeholder) {
                         title = title.replace(
